@@ -1,5 +1,6 @@
-# WeatherDisplayer
-An interface who display all the informations possible about a geographic zone.
+## Prérequis
+```pip install dash```
+```pip install pandas```
 
 ## Utilisation de Python
 ### Récupération de données
