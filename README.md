@@ -1,6 +1,8 @@
 ## Prérequis
-```pip install dash
-pip install pandas```
+```bash
+pip install dash
+pip install pandas
+```
 
 ## Utilisation de Python
 ### Récupération de données
