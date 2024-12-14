@@ -13,15 +13,15 @@ Les paramètres optionnels sont les suivants:
     "METRIC": "<YOUR_METRIC>",
     "LANG": "<YOUR_LANGUAGE>"
 ```
-Installation de dash et de pandas nécessaire à l'affichage des informations et graphiques:
+Installation de Flask:
 ```bash
-pip install dash
-pip install pandas
+pip install flask
 ```
 
 ### Récupération de données
-- Excellente prise en charge de la récupération de données depuis des bases de données (via pandas, SQLAlchemy, psycopg2, etc.).
-- Intégré avec des outils pour des API (REST/GraphQL) et le scraping web (requests, BeautifulSoup, Selenium).
+- Utilisation de requests pour le requetage vers l'API OpenWeather.
 
 ### Affichage des données
-- Bibliothèques de visualisation puissantes : Matplotlib, Seaborn, Plotly, et Dash (pour des tableaux de bord interactifs).
+- Pour ce qui est de la partie affichage, j'ai tout simplement choisi Flask pour me permettre de designer comme je le souhaite 
+le rendu des informations dans le navigateur. Flask m'oblige a tout faire moi même mais au moins, ça aura l'avantage d'être 
+entièrement modifiable.
