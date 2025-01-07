@@ -4,23 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Displayer</title>
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
-    <header>
-        <h1>Weather Displayer</h1>
-    </header>
-    <main>
-        <div id="current-weather">
-            <img id="icon"></img>
-            <p id="temp"></p>
-            <p id="description"></p>
-            <p id="sunrise"></p>
-            <p id="sunset"></p>
-        </div>
-        <div id="daily-forecast"></div>
-    </main>
+    <div id="content">
+        <header>
+            <h1>Weather Displayer</h1>
+        </header>
+        <main>
+            <div id="current-weather">
+                <div id="icon-weather">
+                    <img id="icon"></img>
+                </div>
+                <div id="weather-inf">
+                    <p id="temp"></p>
+                    <p id="description"></p>
+                    <div id="sun">
+                        <p id="sunrise"></p>
+                        <p id="sunset"></p>
+                    </div>
+                </div>
+            </div>
+            <div id="daily-forecast"></div>
+        </main>
+    </div>
 
     <script type="text/javascript">
         function displayData(dataToDisplay) {
