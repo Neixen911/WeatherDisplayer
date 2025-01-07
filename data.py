@@ -53,7 +53,7 @@ def get_weather():
                     }
                     weather_informations['daily-forecast'].append(day_forecast)
             else:
-                return f"Erreur {response.status_code} : {response.text}"
+                return f"Erreur {response.status_code} : {response.text}" 
         except requests.exceptions.RequestException as e:
             print(f"Erreur : {e}")
 

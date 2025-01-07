@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Displayer</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
@@ -12,21 +12,28 @@
         <h1>Weather Displayer</h1>
     </header>
     <main>
-        {% if weather %}
-            <p id="weather_inf">{{ weather }}</p>
-        {% endif %}
+        <p id="weather"></p>
     </main>
+
     <script type="text/javascript">
+        function displayData(dataToDisplay) {
+            console.log("DEBUG: display data");
+            const weather = document.getElementById('weather');
+            weather.innerHTML += `${dataToDisplay}`;
+        }
+
         function updateData() {
-            console.log("DEBUG: Update data");
+            console.log("DEBUG: request update data");
             $.getJSON('/update_data', function(result) {
-                console.log("DEBUG: Received");
-                console.log(result);
-                $("#weather_inf").append(result);
+                console.log("DEBUG: Received data");
+                displayData(JSON.stringify(result));
             });
         }
 
         $(document).ready(function() {
+            console.log("DEBUG: catch initial weather data");
+            const weatherData = '{{ weather|tojson }}';
+            displayData(weatherData);
             console.log("DEBUG: initialisation of interval update");
             setInterval(updateData, 90000);
         });
