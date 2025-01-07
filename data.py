@@ -57,12 +57,15 @@ def get_weather():
         except requests.exceptions.RequestException as e:
             print(f"Erreur : {e}")
 
-        time.sleep(90)  # Attente de 90 secondes
         return weather_informations
 
 @app.route('/')
 def weather():
     return render_template('app.html', weather=get_weather())
+
+@app.route('/update_data')
+def update_data():
+    return get_weather()
 
 if __name__ == "__main__":
     app.run(debug=True)

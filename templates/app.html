@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Displayer</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
     <header>
@@ -12,8 +13,23 @@
     </header>
     <main>
         {% if weather %}
-            <p>{{ weather }}</p>
+            <p id="weather_inf">{{ weather }}</p>
         {% endif %}
     </main>
+    <script type="text/javascript">
+        function updateData() {
+            console.log("DEBUG: Update data");
+            $.getJSON('/update_data', function(result) {
+                console.log("DEBUG: Received");
+                console.log(result);
+                $("#weather_inf").append(result);
+            });
+        }
+
+        $(document).ready(function() {
+            console.log("DEBUG: initialisation of interval update");
+            setInterval(updateData, 90000);
+        });
+    </script>
 </body>
 </html>
