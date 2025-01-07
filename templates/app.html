@@ -54,6 +54,9 @@
             console.log("DEBUG: request update data");
             $.getJSON('/update-data', function(result) {
                 console.log("DEBUG: Received data");
+                while (document.getElementById('daily-forecast').firstChild) {
+                    document.getElementById('daily-forecast').removeChild(document.getElementById('daily-forecast').firstChild);
+                }
                 displayData(JSON.stringify(result));
             });
         }
