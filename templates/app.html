@@ -10,7 +10,7 @@
 <body>
     <div id="content">
         <header>
-            <h1>Weather Displayer</h1>
+            <h1 id="time"></h1>
         </header>
         <main>
             <div id="current-weather">
@@ -34,24 +34,28 @@
         function displayData(dataToDisplay) {
             console.log("DEBUG: display data");
             const currentweather = document.getElementById('current-weather');
+            // Display the actual time
+            const time = document.getElementById('time');
+            const date = new Date();
+            time.innerHTML = date.toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'});
             // Display all the data
             const weather = document.createElement('p');
             weather.innerHTML = dataToDisplay;
             // Display the current weather
             const weatherData = JSON.parse(dataToDisplay);
             document.getElementById('icon').src                 = `${weatherData['current-weather']['icon']}`;
-            document.getElementById('temp').innerHTML           = `${weatherData['current-weather']['temp']}`;
+            document.getElementById('temp').innerHTML           = `${weatherData['current-weather']['temp']}°C`;
             document.getElementById('description').innerHTML    = `${weatherData['current-weather']['description']}`;
-            document.getElementById('sunrise').innerHTML        = `${weatherData['current-weather']['sunrise']}`;
-            document.getElementById('sunset').innerHTML         = `${weatherData['current-weather']['sunset']}`;
+            document.getElementById('sunrise').innerHTML        = `Levée du soleil: ${weatherData['current-weather']['sunrise']}`;
+            document.getElementById('sunset').innerHTML         = `Coucher du soleil: ${weatherData['current-weather']['sunset']}`;
             // Display the daily forecast
             for (let i = 0; i < weatherData['daily-forecast'].length; i++) {
                 const dailyForecast = document.getElementById('daily-forecast');
                 const dailyForecastElement = document.createElement('div');
                 dailyForecastElement.innerHTML = `
                     <img src="${weatherData['daily-forecast'][i]['icon']}"></img>
-                    <p>${weatherData['daily-forecast'][i]['temp_max']}</p>
-                    <p>${weatherData['daily-forecast'][i]['temp_min']}</p>
+                    <p>Max: ${weatherData['daily-forecast'][i]['temp_max']}°C</p>
+                    <p>Min: ${weatherData['daily-forecast'][i]['temp_min']}°C</p>
                     <p>${weatherData['daily-forecast'][i]['description']}</p>
                 `;
                 dailyForecast.appendChild(dailyForecastElement);
