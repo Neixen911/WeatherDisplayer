@@ -25,7 +25,7 @@ def get_weather():
             response = requests.get(current_weather)
             if response.status_code == 200:
                 data = response.json()
-                weather_informations['current-weather']['icon'] = data['weather'][0]['icon']
+                weather_informations['current-weather']['icon'] = "https://openweathermap.org/img/wn/" + data['weather'][0]['icon'] + "@2x.png"
                 weather_informations['current-weather']['main'] = data['weather'][0]['main']
                 weather_informations['current-weather']['description'] = data['weather'][0]['description']
                 weather_informations['current-weather']['temp'] = data['main']['temp']
@@ -45,7 +45,7 @@ def get_weather():
                 # Itère sur chaque élément de la liste data['list']
                 for i in range(0, len(data['list'])):
                     day_forecast = {
-                        'icon': data['list'][i]['weather'][0]['icon'],
+                        'icon': "https://openweathermap.org/img/wn/" + data['list'][i]['weather'][0]['icon'] + "@2x.png",
                         'main': data['list'][i]['weather'][0]['main'],
                         'description': data['list'][i]['weather'][0]['description'],
                         'temp_min': data['list'][i]['temp']['min'],
@@ -63,7 +63,7 @@ def get_weather():
 def weather():
     return render_template('app.html', weather=get_weather())
 
-@app.route('/update_data')
+@app.route('/update-data')
 def update_data():
     return get_weather()
 

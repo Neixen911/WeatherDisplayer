@@ -12,19 +12,47 @@
         <h1>Weather Displayer</h1>
     </header>
     <main>
-        <p id="weather"></p>
+        <div id="current-weather">
+            <img id="icon"></img>
+            <p id="temp"></p>
+            <p id="description"></p>
+            <p id="sunrise"></p>
+            <p id="sunset"></p>
+        </div>
+        <div id="daily-forecast"></div>
     </main>
 
     <script type="text/javascript">
         function displayData(dataToDisplay) {
             console.log("DEBUG: display data");
-            const weather = document.getElementById('weather');
-            weather.innerHTML += `${dataToDisplay}`;
+            const currentweather = document.getElementById('current-weather');
+            // Display all the data
+            const weather = document.createElement('p');
+            weather.innerHTML = dataToDisplay;
+            // Display the current weather
+            const weatherData = JSON.parse(dataToDisplay);
+            document.getElementById('icon').src                 = `${weatherData['current-weather']['icon']}`;
+            document.getElementById('temp').innerHTML           = `${weatherData['current-weather']['temp']}`;
+            document.getElementById('description').innerHTML    = `${weatherData['current-weather']['description']}`;
+            document.getElementById('sunrise').innerHTML        = `${weatherData['current-weather']['sunrise']}`;
+            document.getElementById('sunset').innerHTML         = `${weatherData['current-weather']['sunset']}`;
+            // Display the daily forecast
+            for (let i = 0; i < weatherData['daily-forecast'].length; i++) {
+                const dailyForecast = document.getElementById('daily-forecast');
+                const dailyForecastElement = document.createElement('div');
+                dailyForecastElement.innerHTML = `
+                    <img src="${weatherData['daily-forecast'][i]['icon']}"></img>
+                    <p>${weatherData['daily-forecast'][i]['temp_max']}</p>
+                    <p>${weatherData['daily-forecast'][i]['temp_min']}</p>
+                    <p>${weatherData['daily-forecast'][i]['description']}</p>
+                `;
+                dailyForecast.appendChild(dailyForecastElement);
+            }
         }
 
         function updateData() {
             console.log("DEBUG: request update data");
-            $.getJSON('/update_data', function(result) {
+            $.getJSON('/update-data', function(result) {
                 console.log("DEBUG: Received data");
                 displayData(JSON.stringify(result));
             });
