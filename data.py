@@ -11,13 +11,15 @@ with open("credentials.json", "r") as file:
     credentials = json.load(file)
 
 # URL de l'API
-current_weather = f"https://api.openweathermap.org/data/2.5/weather?lat={credentials['LAT']}&lon={credentials['LON']}&appid={credentials['API_KEY']}&units={credentials['METRIC']}&lang={credentials['LANG']}"
-three_hour_forecast= f"https://api.openweathermap.org/data/2.5/forecast/daily?lat={credentials['LAT']}&lon={credentials['LON']}&cnt={7}&appid={credentials['API_KEY']}&units={credentials['METRIC']}&lang={credentials['LANG']}"
+current_weather = f"https://api.openweathermap.org/data/2.5/weather?lat={credentials['LAT']}&lon={credentials['LON']}&appid={credentials['API_KEY']}&units={credentials['METRIC']}"
+hourly_forecast = f"https://pro.openweathermap.org/data/2.5/forecast/hourly?lat={credentials['LAT']}&lon={credentials['LON']}&cnt={8}&appid={credentials['API_KEY']}&units={credentials['METRIC']}"
+three_hour_forecast= f"https://api.openweathermap.org/data/2.5/forecast/daily?lat={credentials['LAT']}&lon={credentials['LON']}&cnt={7}&appid={credentials['API_KEY']}&units={credentials['METRIC']}"
 
 def get_weather():
     weather_informations = {
-        'current-weather': {}, 
-        'daily-forecast': []
+        'current-weather': {},
+        'hourly-forecast': [],
+        'daily-forecast': [],
     }
     while True:
         try:
@@ -33,8 +35,23 @@ def get_weather():
                 weather_informations['current-weather']['temp_min'] = data['main']['temp_min']
                 weather_informations['current-weather']['temp_max'] = data['main']['temp_max']
                 weather_informations['current-weather']['wind'] = data['wind']['speed']
-                weather_informations['current-weather']['sunrise'] = time.strftime('%H:%M', time.gmtime(data['sys']['sunrise']))
-                weather_informations['current-weather']['sunset'] = time.strftime('%H:%M', time.gmtime(data['sys']['sunset']))
+                weather_informations['current-weather']['sunrise'] = time.strftime('%Hh%M', time.gmtime(data['sys']['sunrise']))
+                weather_informations['current-weather']['sunset'] = time.strftime('%Hh%M', time.gmtime(data['sys']['sunset']))
+            else:
+                return f"Erreur {response.status_code} : {response.text}"
+        
+            # Hourly forecast on 12 hours
+            response = requests.get(hourly_forecast)
+            if response.status_code == 200:
+                data = response.json()
+                # Itère sur chaque élément de la liste data['list']
+                for i in range(0, len(data['list'])):
+                    hour_forecast = {
+                        'hour': time.strftime('%Hh', time.gmtime(data['list'][i]['dt'])),
+                        'icon': "https://openweathermap.org/img/wn/" + data['list'][i]['weather'][0]['icon'] + "@2x.png",
+                        'temp': data['list'][i]['main']['temp'],
+                    }
+                    weather_informations['hourly-forecast'].append(hour_forecast)
             else:
                 return f"Erreur {response.status_code} : {response.text}"
 
@@ -45,6 +62,7 @@ def get_weather():
                 # Itère sur chaque élément de la liste data['list']
                 for i in range(0, len(data['list'])):
                     day_forecast = {
+                        'day': time.strftime('%A', time.gmtime(data['list'][i]['dt'])),
                         'icon': "https://openweathermap.org/img/wn/" + data['list'][i]['weather'][0]['icon'] + "@2x.png",
                         'main': data['list'][i]['weather'][0]['main'],
                         'description': data['list'][i]['weather'][0]['description'],
