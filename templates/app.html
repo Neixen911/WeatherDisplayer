@@ -13,18 +13,21 @@
             <h1 id="time"></h1>
         </header>
         <main>
-            <div id="current-weather">
-                <div id="icon-weather">
-                    <img id="icon"></img>
-                </div>
-                <div id="weather-inf">
-                    <p id="temp"></p>
-                    <p id="description"></p>
-                    <div id="sun">
-                        <p id="sunrise"></p>
-                        <p id="sunset"></p>
+            <div id="weather-of-the-day">
+                <div id="current-weather">
+                    <div id="icon-weather">
+                        <img id="icon"></img>
+                    </div>
+                    <div id="weather-inf">
+                        <p id="temp"></p>
+                        <p id="description"></p>
+                        <div id="sun">
+                            <p id="sunrise"></p>
+                            <p id="sunset"></p>
+                        </div>
                     </div>
                 </div>
+                <div id="hourly-forecast"></div>
             </div>
             <div id="daily-forecast"></div>
         </main>
@@ -41,18 +44,31 @@
             // Display all the data
             const weather = document.createElement('p');
             weather.innerHTML = dataToDisplay;
+            //currentweather.appendChild(weather);
             // Display the current weather
             const weatherData = JSON.parse(dataToDisplay);
             document.getElementById('icon').src                 = `${weatherData['current-weather']['icon']}`;
             document.getElementById('temp').innerHTML           = `${weatherData['current-weather']['temp']}°C`;
             document.getElementById('description').innerHTML    = `${weatherData['current-weather']['description']}`;
-            document.getElementById('sunrise').innerHTML        = `Levée du soleil: ${weatherData['current-weather']['sunrise']}`;
-            document.getElementById('sunset').innerHTML         = `Coucher du soleil: ${weatherData['current-weather']['sunset']}`;
+            document.getElementById('sunrise').innerHTML        = `Sunrise: ${weatherData['current-weather']['sunrise']}`;
+            document.getElementById('sunset').innerHTML         = `Sunset: ${weatherData['current-weather']['sunset']}`;
+            // Display the hourly forecast
+            for (let i = 0; i < weatherData['hourly-forecast'].length; i++) {
+                const hourlyForecast = document.getElementById('hourly-forecast');
+                const hourlyForecastElement = document.createElement('div');
+                hourlyForecastElement.innerHTML = `
+                    <p>${weatherData['hourly-forecast'][i]['hour']}</p>
+                    <img src="${weatherData['hourly-forecast'][i]['icon']}"></img>
+                    <p>${weatherData['hourly-forecast'][i]['temp']}°C</p>
+                `;
+                hourlyForecast.appendChild(hourlyForecastElement);
+            }
             // Display the daily forecast
             for (let i = 0; i < weatherData['daily-forecast'].length; i++) {
                 const dailyForecast = document.getElementById('daily-forecast');
                 const dailyForecastElement = document.createElement('div');
                 dailyForecastElement.innerHTML = `
+                    <p>${weatherData['daily-forecast'][i]['day']}</p>
                     <img src="${weatherData['daily-forecast'][i]['icon']}"></img>
                     <p>Max: ${weatherData['daily-forecast'][i]['temp_max']}°C</p>
                     <p>Min: ${weatherData['daily-forecast'][i]['temp_min']}°C</p>
@@ -66,6 +82,9 @@
             console.log("DEBUG: request update data");
             $.getJSON('/update-data', function(result) {
                 console.log("DEBUG: Received data");
+                while (document.getElementById('hourly-forecast').firstChild) {
+                    document.getElementById('hourly-forecast').removeChild(document.getElementById('hourly-forecast').firstChild);
+                }
                 while (document.getElementById('daily-forecast').firstChild) {
                     document.getElementById('daily-forecast').removeChild(document.getElementById('daily-forecast').firstChild);
                 }
@@ -77,8 +96,8 @@
             console.log("DEBUG: catch initial weather data");
             const weatherData = '{{ weather|tojson }}';
             displayData(weatherData);
-            console.log("DEBUG: initialisation of interval update");
-            setInterval(updateData, 90000);
+            console.log("DEBUG: initialisation of interval for update data");
+            setInterval(updateData, 60000);
         });
     </script>
 </body>
