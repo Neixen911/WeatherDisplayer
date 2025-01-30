@@ -13,7 +13,7 @@ with open("credentials.json", "r") as file:
 # URL de l'API
 current_weather = f"https://api.openweathermap.org/data/2.5/weather?lat={credentials['LAT']}&lon={credentials['LON']}&appid={credentials['API_KEY']}&units={credentials['METRIC']}"
 hourly_forecast = f"https://pro.openweathermap.org/data/2.5/forecast/hourly?lat={credentials['LAT']}&lon={credentials['LON']}&cnt={8}&appid={credentials['API_KEY']}&units={credentials['METRIC']}"
-three_hour_forecast= f"https://api.openweathermap.org/data/2.5/forecast/daily?lat={credentials['LAT']}&lon={credentials['LON']}&cnt={7}&appid={credentials['API_KEY']}&units={credentials['METRIC']}"
+three_hour_forecast= f"https://api.openweathermap.org/data/2.5/forecast/daily?lat={credentials['LAT']}&lon={credentials['LON']}&cnt={8}&appid={credentials['API_KEY']}&units={credentials['METRIC']}"
 
 def get_weather():
     weather_informations = {
@@ -40,7 +40,7 @@ def get_weather():
             else:
                 return f"Erreur {response.status_code} : {response.text}"
         
-            # Hourly forecast on 12 hours
+            # Hourly forecast for the next hours
             response = requests.get(hourly_forecast)
             if response.status_code == 200:
                 data = response.json()
@@ -60,7 +60,7 @@ def get_weather():
             if response.status_code == 200:
                 data = response.json()
                 # Itère sur chaque élément de la liste data['list']
-                for i in range(0, len(data['list'])):
+                for i in range(1, len(data['list'])):
                     day_forecast = {
                         'day': time.strftime('%A', time.gmtime(data['list'][i]['dt'])),
                         'icon': "https://openweathermap.org/img/wn/" + data['list'][i]['weather'][0]['icon'] + "@2x.png",
