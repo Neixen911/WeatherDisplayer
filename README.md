@@ -32,7 +32,7 @@ Now that is made, you need to create a venv (for 'Virtual Environment') to insta
 there are no version conflicts with your other project who use Python.
 To do that's, you need to type the following command to create a venv:
 ```bash
-python3 -m venv path/to/venv
+python3 -m venv .venv
 ```
 
 When the venv is created, you now need to activate it with this command:
