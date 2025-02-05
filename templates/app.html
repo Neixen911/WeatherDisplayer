@@ -48,7 +48,7 @@
             // Display the current weather
             const weatherData = JSON.parse(dataToDisplay);
             document.getElementById('icon').src                 = `${weatherData['current-weather']['icon']}`;
-            document.getElementById('temp').innerHTML           = `${weatherData['current-weather']['temp']}°C`;
+            document.getElementById('temp').innerHTML           = `${weatherData['current-weather']['temp']}°`;
             document.getElementById('description').innerHTML    = `${weatherData['current-weather']['description']}`;
             document.getElementById('sunrise').innerHTML        = `Sunrise: ${weatherData['current-weather']['sunrise']}`;
             document.getElementById('sunset').innerHTML         = `Sunset: ${weatherData['current-weather']['sunset']}`;
@@ -59,7 +59,7 @@
                 hourlyForecastElement.innerHTML = `
                     <p>${weatherData['hourly-forecast'][i]['hour']}</p>
                     <img src="${weatherData['hourly-forecast'][i]['icon']}"></img>
-                    <p>${weatherData['hourly-forecast'][i]['temp']}°C</p>
+                    <p>${weatherData['hourly-forecast'][i]['temp']}°</p>
                 `;
                 hourlyForecast.appendChild(hourlyForecastElement);
             }
@@ -70,8 +70,7 @@
                 dailyForecastElement.innerHTML = `
                     <p>${weatherData['daily-forecast'][i]['day']}</p>
                     <img src="${weatherData['daily-forecast'][i]['icon']}"></img>
-                    <p>Max: ${weatherData['daily-forecast'][i]['temp_max']}°C</p>
-                    <p>Min: ${weatherData['daily-forecast'][i]['temp_min']}°C</p>
+                    <p>${weatherData['daily-forecast'][i]['temp_min']}° / ${weatherData['daily-forecast'][i]['temp_max']}°</p>
                     <p>${weatherData['daily-forecast'][i]['description']}</p>
                 `;
                 dailyForecast.appendChild(dailyForecastElement);

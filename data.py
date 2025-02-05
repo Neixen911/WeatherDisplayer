@@ -69,6 +69,8 @@ def get_weather():
                         'temp_min': data['list'][i]['temp']['min'],
                         'temp_max': data['list'][i]['temp']['max']
                     }
+                    # Ajustement sur les informations inutiles
+                    day_forecast['description'] = day_forecast['description'].replace('clouds', '')
                     weather_informations['daily-forecast'].append(day_forecast)
             else:
                 return f"Erreur {response.status_code} : {response.text}" 
