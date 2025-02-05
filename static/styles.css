@@ -3,6 +3,14 @@
     padding: 0;
 }
 
+h1 {
+    font-size: 2.5em;
+}
+
+p {
+    font-size: 1.5em;
+}
+
 body {
     display: flex;
     flex-direction: column;
@@ -18,15 +26,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
-    height: 60%;
-}
-
-header {
-    height: 10%;
-}
-
-main {
-    height: 70%;
+    height: 80%;
 }
 
 #weather-of-the-day {
