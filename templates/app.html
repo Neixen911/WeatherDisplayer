@@ -37,21 +37,28 @@
         function displayData(dataToDisplay) {
             console.log("DEBUG: display data");
             const currentweather = document.getElementById('current-weather');
-            // Display the actual time
-            const time = document.getElementById('time');
-            const date = new Date();
-            time.innerHTML = date.toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'});
             // Display all the data
-            const weather = document.createElement('p');
-            weather.innerHTML = dataToDisplay;
-            //currentweather.appendChild(weather);
-            // Display the current weather
+            //console.log("DEBUG: all received data:", dataToDisplay);
             const weatherData = JSON.parse(dataToDisplay);
+            console.log("DEBUG: name of the city:", weatherData['city']);
+            console.log("DEBUG: timezone:", weatherData['time']);
+            // Display the actual time of the city
+            const time = document.getElementById('time');
+            const UTC = Date.now() + weatherData['time'];
+            time.innerHTML = `${new Date(UTC).toLocaleString('fr', { hour: '2-digit', minute: '2-digit'}).replace(':', 'h')}`;
+            // Display the current weather
             document.getElementById('icon').src                 = `${weatherData['current-weather']['icon']}`;
             document.getElementById('temp').innerHTML           = `${weatherData['current-weather']['temp']}°`;
             document.getElementById('description').innerHTML    = `${weatherData['current-weather']['description']}`;
             document.getElementById('sunrise').innerHTML        = `Sunrise: ${weatherData['current-weather']['sunrise']}`;
             document.getElementById('sunset').innerHTML         = `Sunset: ${weatherData['current-weather']['sunset']}`;
+            // Add specific information about the current weather
+            if ( weatherData['current-weather']['rain'] > 0 ) {
+                document.getElementById('temp').innerHTML += ` - ${weatherData['current-weather']['rain']}mm`;
+            }
+            if ( weatherData['current-weather']['snow'] > 0 ) {
+                document.getElementById('temp').innerHTML += ` - ${weatherData['current-weather']['snow']}mm`;
+            }
             // Display the hourly forecast
             for (let i = 0; i < weatherData['hourly-forecast'].length; i++) {
                 const hourlyForecast = document.getElementById('hourly-forecast');

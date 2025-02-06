@@ -27,10 +27,14 @@ def get_weather():
             response = requests.get(current_weather)
             if response.status_code == 200:
                 data = response.json()
+                weather_informations['city'] = data['name']
+                weather_informations['time'] = data['timezone']
                 weather_informations['current-weather']['icon'] = "https://openweathermap.org/img/wn/" + data['weather'][0]['icon'] + "@2x.png"
                 weather_informations['current-weather']['main'] = data['weather'][0]['main']
-                weather_informations['current-weather']['description'] = data['weather'][0]['description']
+                weather_informations['current-weather']['description'] = data['weather'][0]['description'].capitalize()
                 weather_informations['current-weather']['temp'] = data['main']['temp']
+                weather_informations['current-weather']['rain'] = data['rain']['1h'] if 'rain' in data else 0
+                weather_informations['current-weather']['snow'] = data['snow']['1h'] if 'snow' in data else 0
                 weather_informations['current-weather']['feels_like'] = data['main']['feels_like']
                 weather_informations['current-weather']['temp_min'] = data['main']['temp_min']
                 weather_informations['current-weather']['temp_max'] = data['main']['temp_max']
@@ -65,12 +69,13 @@ def get_weather():
                         'day': time.strftime('%A', time.gmtime(data['list'][i]['dt'])),
                         'icon': "https://openweathermap.org/img/wn/" + data['list'][i]['weather'][0]['icon'] + "@2x.png",
                         'main': data['list'][i]['weather'][0]['main'],
-                        'description': data['list'][i]['weather'][0]['description'],
+                        'description': data['list'][i]['weather'][0]['description'].capitalize(),
                         'temp_min': data['list'][i]['temp']['min'],
                         'temp_max': data['list'][i]['temp']['max']
                     }
                     # Ajustement sur les informations inutiles
                     day_forecast['description'] = day_forecast['description'].replace('clouds', '')
+                    day_forecast['description'] = day_forecast['description'].replace('Sky is clear', 'Clear sky')
                     weather_informations['daily-forecast'].append(day_forecast)
             else:
                 return f"Erreur {response.status_code} : {response.text}" 
