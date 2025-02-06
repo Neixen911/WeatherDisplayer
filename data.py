@@ -53,7 +53,7 @@ def get_weather():
                     hour_forecast = {
                         'hour': time.strftime('%Hh', time.gmtime(data['list'][i]['dt'])),
                         'icon': "https://openweathermap.org/img/wn/" + data['list'][i]['weather'][0]['icon'] + "@2x.png",
-                        'temp': data['list'][i]['main']['temp'],
+                        'temp': round(data['list'][i]['main']['temp']),
                     }
                     weather_informations['hourly-forecast'].append(hour_forecast)
             else:
@@ -70,8 +70,8 @@ def get_weather():
                         'icon': "https://openweathermap.org/img/wn/" + data['list'][i]['weather'][0]['icon'] + "@2x.png",
                         'main': data['list'][i]['weather'][0]['main'],
                         'description': data['list'][i]['weather'][0]['description'].capitalize(),
-                        'temp_min': data['list'][i]['temp']['min'],
-                        'temp_max': data['list'][i]['temp']['max']
+                        'temp_min': round(data['list'][i]['temp']['min']),
+                        'temp_max': round(data['list'][i]['temp']['max'])
                     }
                     # Ajustement sur les informations inutiles
                     day_forecast['description'] = day_forecast['description'].replace('clouds', '')
