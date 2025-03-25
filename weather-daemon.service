@@ -1,0 +1,9 @@
+[Unit]
+Description=Launch my own weather displayer server.
+
+[Service]
+Type=simple
+ExecStart=./home/mi/Documents/GitHub/WeatherDisplayer/weather-daemon.sh start
+
+[Install]
+WantedBy=multi-user.target
