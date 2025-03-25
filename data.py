@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+import os
 import requests
 import json
 import time
@@ -7,7 +8,9 @@ import time
 app = Flask(__name__)
 
 # Récupération des credentials
-with open("credentials.json", "r") as file:
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+credentials_file = os.path.join(BASE_DIR, "credentials.json")
+with open(credentials_file, "r") as file:
     credentials = json.load(file)
 
 # URL de l'API
