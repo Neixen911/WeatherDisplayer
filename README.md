@@ -49,3 +49,9 @@ So, to install Flask, you need to do this command:
 ```bash
 pip install flask
 ```
+
+To make a daemon of the weather server, you have to change the line of the `weather-daemon.sh` in the function daemon() and replace the path of
+the script `data.py`.
+
+After that change, you have to put the file `weather-daemon.service` in the directory `/etc/systemd/system/` to make the
+daemon availlable.
