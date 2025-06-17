@@ -33,17 +33,12 @@ def get_weather():
                 weather_informations['city'] = data['name']
                 weather_informations['time'] = data['timezone']
                 weather_informations['current-weather']['icon'] = "https://openweathermap.org/img/wn/" + data['weather'][0]['icon'] + "@2x.png"
-                weather_informations['current-weather']['main'] = data['weather'][0]['main']
-                weather_informations['current-weather']['description'] = data['weather'][0]['description'].capitalize()
                 weather_informations['current-weather']['temp'] = data['main']['temp']
-                weather_informations['current-weather']['rain'] = data['rain']['1h'] if 'rain' in data else 0
-                weather_informations['current-weather']['snow'] = data['snow']['1h'] if 'snow' in data else 0
-                weather_informations['current-weather']['feels_like'] = data['main']['feels_like']
-                weather_informations['current-weather']['temp_min'] = data['main']['temp_min']
-                weather_informations['current-weather']['temp_max'] = data['main']['temp_max']
-                weather_informations['current-weather']['wind'] = data['wind']['speed']
+                weather_informations['current-weather']['description'] = data['weather'][0]['description'].capitalize()
                 weather_informations['current-weather']['sunrise'] = time.strftime('%Hh%M', time.gmtime(data['sys']['sunrise']))
                 weather_informations['current-weather']['sunset'] = time.strftime('%Hh%M', time.gmtime(data['sys']['sunset']))
+                weather_informations['current-weather']['rain'] = data['rain']['1h'] if 'rain' in data else 0
+                weather_informations['current-weather']['snow'] = data['snow']['1h'] if 'snow' in data else 0
             else:
                 return f"Erreur {response.status_code} : {response.text}"
         
