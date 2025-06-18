@@ -14,10 +14,9 @@ with open(credentials_file, "r") as file:
     credentials = json.load(file)
 
 # URL de l'API
-# current_weather = f"https://api.openweathermap.org/data/2.5/weather?lat={credentials['LAT']}&lon={credentials['LON']}&appid={credentials['API_KEY']}&units={credentials['METRIC']}"
 current_weather = f"https://api.open-meteo.com/v1/forecast?latitude={credentials['LAT']}&longitude={credentials['LON']}&daily=sunset,sunrise&current=temperature_2m,weather_code,rain,snowfall,precipitation,is_day&timezone=Europe%2FLondon&timeformat=unixtime"
-hourly_forecast = "" # f"https://pro.openweathermap.org/data/2.5/forecast/hourly?lat={credentials['LAT']}&lon={credentials['LON']}&cnt={8}&appid={credentials['API_KEY']}&units={credentials['METRIC']}"
-three_hour_forecast = "" # f"https://api.openweathermap.org/data/2.5/forecast/daily?lat={credentials['LAT']}&lon={credentials['LON']}&cnt={8}&appid={credentials['API_KEY']}&units={credentials['METRIC']}"
+hourly_forecast = f"https://api.open-meteo.com/v1/forecast?latitude={credentials['LAT']}&longitude={credentials['LON']}&hourly=temperature_2m,weather_code&timezone=Europe%2FLondon&timeformat=unixtime"
+daily_forecast = f"https://api.open-meteo.com/v1/forecast?latitude={credentials['LAT']}&longitude={credentials['LON']}&daily=weather_code,temperature_2m_min,temperature_2m_max&timezone=Europe%2FLondon&timeformat=unixtime"
 
 def get_weather():
     weather_informations = {
@@ -27,11 +26,12 @@ def get_weather():
     }
     while True:
         try:
+            # Variable to use multiple times
+            day_or_night = ""
             # Current weather
             response = requests.get(current_weather)
             if response.status_code == 200:
                 data = response.json()
-                print(f"Result API : {data}")
                 # weather_informations['city'] = data['name']
                 weather_informations['time'] = data['utc_offset_seconds']
                 icon = get_desc_icon_from(data['current']['weather_code'])['icon']
@@ -50,34 +50,30 @@ def get_weather():
             response = requests.get(hourly_forecast)
             if response.status_code == 200:
                 data = response.json()
-                # Itère sur chaque élément de la liste data['list']
-                for i in range(0, len(data['list'])):
+                # Itère sur les 7 prochaines heures
+                for i in range(2, 9):
                     hour_forecast = {
-                        'hour': time.strftime('%Hh', time.gmtime(data['list'][i]['dt'])),
-                        'icon': "https://openweathermap.org/img/wn/" + data['list'][i]['weather'][0]['icon'] + "@2x.png",
-                        'temp': round(data['list'][i]['main']['temp']),
+                        'hour': time.strftime('%Hh', time.gmtime(data['hourly']['time'][i])),
+                        'icon': "https://openweathermap.org/img/wn/" + get_desc_icon_from(data['hourly']['weather_code'][i])['icon'] + day_or_night + "@2x.png",
+                        'temp': round(data['hourly']['temperature_2m'][i]),
                     }
                     weather_informations['hourly-forecast'].append(hour_forecast)
             else:
                 return f"Erreur {response.status_code} : {response.text}"
 
             # Daily forecast on 7 days
-            response = requests.get(three_hour_forecast)
+            response = requests.get(daily_forecast)
             if response.status_code == 200:
                 data = response.json()
-                # Itère sur chaque élément de la liste data['list']
-                for i in range(1, len(data['list'])):
+                # Itère sur les 5 prochains jours
+                for i in range(2, len(data['daily']['time'])):
                     day_forecast = {
-                        'day': time.strftime('%A', time.gmtime(data['list'][i]['dt'])),
-                        'icon': "https://openweathermap.org/img/wn/" + data['list'][i]['weather'][0]['icon'] + "@2x.png",
-                        'main': data['list'][i]['weather'][0]['main'],
-                        'description': data['list'][i]['weather'][0]['description'].capitalize(),
-                        'temp_min': round(data['list'][i]['temp']['min']),
-                        'temp_max': round(data['list'][i]['temp']['max'])
+                        'day': time.strftime('%A', time.gmtime(data['daily']['time'][i])),
+                        'icon': "https://openweathermap.org/img/wn/" + get_desc_icon_from(data['daily']['weather_code'][i])['icon'] + "d" + "@2x.png",
+                        'description': get_desc_icon_from(data['daily']['weather_code'][i])['description'].capitalize(),
+                        'temp_min': round(data['daily']['temperature_2m_min'][i]),
+                        'temp_max': round(data['daily']['temperature_2m_max'][i])
                     }
-                    # Ajustement sur les informations inutiles
-                    day_forecast['description'] = day_forecast['description'].replace('clouds', '')
-                    day_forecast['description'] = day_forecast['description'].replace('Sky is clear', 'Clear sky')
                     weather_informations['daily-forecast'].append(day_forecast)
             else:
                 return f"Erreur {response.status_code} : {response.text}" 
