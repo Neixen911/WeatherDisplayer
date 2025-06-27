@@ -52,6 +52,7 @@ def get_weather():
                 data = response.json()
                 # Iterate over the next 7 hours
                 actual_hour = int(time.strftime("%H", time.localtime())) + 1
+                integer_sunrise = int(weather_informations['current-weather']['sunrise'][0:2])
                 integer_sunset = int(weather_informations['current-weather']['sunset'][0:2])
                 for i in range(actual_hour, actual_hour + 7):
                     if i > integer_sunset:
@@ -120,7 +121,7 @@ def get_desc_icon_from(value):
     for wmo in weather_values:
         if wmo == value:
             return { 'description': weather_values[value][0], 'icon': weather_values[value][1] }
-    return { 'description': "Unknown description", 'icon': "Unknown icon" }
+    return { 'description': value, 'icon': "Unknown icon" }
 
 def get_day_or_night(value):
     if value == 1:
