@@ -73,7 +73,7 @@ def get_weather():
             if response.status_code == 200:
                 data = response.json()
                 # Iterate over the next 7 days
-                for i in range(2, 9):
+                for i in range(1, 8):
                     day_forecast = {
                         'day': time.strftime('%A', time.gmtime(data['daily']['time'][i])),
                         'icon': "https://openweathermap.org/img/wn/" + get_desc_icon_from(data['daily']['weather_code'][i])['icon'] + "d" + "@2x.png",
@@ -116,12 +116,15 @@ def get_desc_icon_from(value):
         81: ("Rain showers", "09"),
         82: ("Rain showers", "09"),
         85: ("Snow showers", "13"),
-        86: ("Snow showers", "13")
+        86: ("Snow showers", "13"),
+        95: ("Thunderstorm", "11"),
+        96: ("Thunderstorm", "11"),
+        99: ("Thunderstorm", "11")
     }
     for wmo in weather_values:
         if wmo == value:
             return { 'description': weather_values[value][0], 'icon': weather_values[value][1] }
-    return { 'description': value, 'icon': "Unknown icon" }
+    return { 'description': str(value), 'icon': "Unknown icon" }
 
 def get_day_or_night(value):
     if value == 1:
